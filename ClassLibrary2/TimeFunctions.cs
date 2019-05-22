@@ -4,20 +4,20 @@ using Microsoft.SqlServer.Server;
 using System.Data.SqlTypes;
 using System.Data.SqlClient;
 
-public class HelloWorldProc
+public class TimeFunctions
 {
-    [Microsoft.SqlServer.Server.SqlProcedure]
-    public static void HelloWorld(out string text)
-    {
-        SqlContext.Pipe.Send("sqlContext.Pipe.Send!" + Environment.NewLine);
-        text = "Hello world!";
-    }
+    //[Microsoft.SqlServer.Server.SqlProcedure]
+    //public static void HelloWorld(out string text)
+    //{
+    //    SqlContext.Pipe.Send("sqlContext.Pipe.Send!" + Environment.NewLine);
+    //    text = "Hello world!";
+    //}
 
-    [SqlFunction()]
-    public static int AddOne(int i)
-    {
-        return i + 1;
-    }
+    //[SqlFunction()]
+    //public static int AddOne(int i)
+    //{
+    //    return i + 1;
+    //}
 
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static int IATADatabaseCount()
@@ -32,8 +32,8 @@ public class HelloWorldProc
         }
     }
 
-    [SqlFunction(DataAccess = DataAccessKind.Read)]
-    public static string TimeZoneFor(string iata)
+ 
+    private static string TimeZoneForIATA(string iata)
     {
         using (SqlConnection conn
             = new SqlConnection("context connection=true"))
@@ -43,6 +43,14 @@ public class HelloWorldProc
                 "select TimeZone from IATA_TimeZone where iata = '" + iata + "'", conn);
             return (string)cmd.ExecuteScalar();
         }
+    }
+
+    [SqlFunction(DataAccess = DataAccessKind.Read)]
+    public static DateTime HerbToLocal(DateTime date, int time, string iata)
+    {
+        string timeZone = TimeZoneForIATA(iata);
+
+        return date.AddDays(5);
     }
 
 }
