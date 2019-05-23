@@ -18,6 +18,16 @@ public class TimeFunctions
     //{
     //    return i + 1;
     //}
+    private static string TimeZoneForIATA(string stationIATA)
+    {
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
+        {
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(
+                "select TimeZone from [dbo].[IATA_TimeZone] where iata = '" + stationIATA + "'", conn);
+            return (string)cmd.ExecuteScalar();
+        }
+    }
 
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static int IATADatabaseCount()
@@ -33,41 +43,36 @@ public class TimeFunctions
     }
 
  
-    public static string TimeZoneForIATA(string iata)
-    {
-        using (SqlConnection conn
-            = new SqlConnection("context connection=true"))
-        {
-            conn.Open();
-            SqlCommand cmd = new SqlCommand(
-                "select TimeZone from [dbo].[IATA_TimeZone] where iata = '" + iata + "'", conn);
-            return (string)cmd.ExecuteScalar();
-        }
-    }
 
+        /* Take a date, time (integer) and 3 letter station identifier and returns
+         * a local/station dateTime.  
+        
+         
+         */
     [SqlFunction(DataAccess = DataAccessKind.Read)]
-    public static DateTime HerbToLocal(DateTime date, int time, string iata)
+    public static DateTime HerbToLocal(DateTime date, int time, string stationIATA)
     {
         // Uses TZConvert Nugat Library
         // https://github.com/mj1856/TimeZoneConverter
         // PM> Install-Package TimeZoneConverter
 
         // Station Time Zone
-        string timeZoneIATA = TimeZoneForIATA(iata);
-        string tzString = TimeZoneConverter.TZConvert.IanaToWindows(timeZoneIATA);
-        TimeZoneInfo tzStation = TimeZoneInfo.FindSystemTimeZoneById(tzString);
+        string timeZoneStationIATA = TimeZoneForIATA(stationIATA);
+        string tzStationString = TimeZoneConverter.TZConvert.IanaToWindows(timeZoneStationIATA);
+        TimeZoneInfo tzStation = TimeZoneInfo.FindSystemTimeZoneById(tzStationString);
 
-        // Local Time Zone
-        string localtzString = TimeZoneConverter.TZConvert.IanaToWindows("America/Chicago");
-        TimeZoneInfo tzLocal = TimeZoneInfo.FindSystemTimeZoneById(localtzString);
+        // Central Time Zone
+        string timeZoneHerbIATA = TimeZoneForIATA("DAL");
+        string tzHerbString = TimeZoneConverter.TZConvert.IanaToWindows(timeZoneHerbIATA);
+        TimeZoneInfo tzHerb = TimeZoneInfo.FindSystemTimeZoneById(tzHerbString);
 
         var hour = time / 100;
         var minutes = time - (hour * 100);
-        var newDate = new DateTime(date.Year, date.Month, date.Day, hour, minutes, 0);
+        var herbDateTime = new DateTime(date.Year, date.Month, date.Day, hour, minutes, 0);
 
-        var convertedDate = TimeZoneInfo.ConvertTime(newDate, tzLocal, tzStation);
+        var stationDateTime = TimeZoneInfo.ConvertTime(herbDateTime, tzHerb, tzStation);
         // Convert from Central Time to Local Time
-        return convertedDate;
+        return stationDateTime;
     }
 
 }
