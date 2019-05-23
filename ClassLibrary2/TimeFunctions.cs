@@ -2,6 +2,28 @@
 using Microsoft.SqlServer.Server;
 using System.Data.SqlClient;
 
+/* Take a date, time (integer) and 3 letter station identifier and returns
+ * a local/station dateTime.  
+
+    // Uses TZConvert Nugat Library
+    // https://github.com/mj1856/TimeZoneConverter
+    // PM> Install-Package TimeZoneConverter
+
+    Written by: Cristos Vasilas, 23 May 2019
+
+
+    To test locally using the console app, use the following sql connection string:'
+    conn.ConnectionString =
+                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
+                "Initial Catalog=Scheduling_Dev;" +
+                "User id=MobileApp;" +
+                "Password=fzmnfAmAox61;";
+
+    else to use in the libary use:
+              using (SqlConnection conn = new SqlConnection("context connection=true"))
+ */
+
+
 public class TimeFunctions
 {
     //[Microsoft.SqlServer.Server.SqlProcedure]
@@ -11,13 +33,7 @@ public class TimeFunctions
     //    text = "Hello world!";
     //}
 
-    //[SqlFunction()]
-    //public static int AddOne(int i)
-    //{
-    //    return i + 1;
-    //}
-
-    //"Server=tcp:az-sqlpsrc01.int.swapa.org ,1433;Database=Scheduling_Dev;uid=MobileApp;pwd=fzmnfAmAox61;"
+  
     public static string TimeZoneForIATA(string stationIATA)
     {
         using (SqlConnection conn = new SqlConnection())
@@ -47,19 +63,11 @@ public class TimeFunctions
         }
     }
 
- 
 
-        /* Take a date, time (integer) and 3 letter station identifier and returns
-         * a local/station dateTime.  
-        
-         
-         */
     [SqlFunction(DataAccess = DataAccessKind.Read)]
-    public static DateTime HerbDateandTimeToStationTime(DateTime date, int time, string stationIATA)
+    public static DateTime HerbDateandIntegerTimeToStationTime(DateTime date, int time, string stationIATA)
     {
-        // Uses TZConvert Nugat Library
-        // https://github.com/mj1856/TimeZoneConverter
-        // PM> Install-Package TimeZoneConverter
+        
 
         // Convert integer time to create a dateTime
         var hour = time / 100;
@@ -85,10 +93,6 @@ public class TimeFunctions
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static DateTime StationTimeToStationTime(DateTime dateTime, string fromStationIATA, string toStationIATA)
     {
-        // Uses TZConvert Nugat Library
-        // https://github.com/mj1856/TimeZoneConverter
-        // PM> Install-Package TimeZoneConverter
-
         var fromStationDateTime = dateTime;
 
         // Station 1 Time Zone
@@ -108,12 +112,8 @@ public class TimeFunctions
     }
 
     [SqlFunction(DataAccess = DataAccessKind.Read)]
-    public static DateTime HerbDateandTimeToUTCTime(DateTime date, int time)
+    public static DateTime HerbDateandIntegerTimeToUTCTime(DateTime date, int time)
     {
-        // Uses TZConvert Nugat Library
-        // https://github.com/mj1856/TimeZoneConverter
-        // PM> Install-Package TimeZoneConverter
-
         // Convert integer time to create a dateTime
         var hour = time / 100;
         var minutes = time - (hour * 100);
@@ -136,10 +136,6 @@ public class TimeFunctions
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static DateTime StationTimeToUTC(DateTime dateTime, string stationIATA)
     {
-        // Uses TZConvert Nugat Library
-        // https://github.com/mj1856/TimeZoneConverter
-        // PM> Install-Package TimeZoneConverter
-
         var stationDateTime = dateTime;
 
         // UTC Time Zone
@@ -159,10 +155,6 @@ public class TimeFunctions
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static DateTime UTCtoStationTime(DateTime dateTime, string stationIATA)
     {
-        // Uses TZConvert Nugat Library
-        // https://github.com/mj1856/TimeZoneConverter
-        // PM> Install-Package TimeZoneConverter
-
         var utcDateTime = dateTime;
 
         // UTC Time Zone

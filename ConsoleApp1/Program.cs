@@ -18,7 +18,7 @@ namespace ConsoleApp1
             var minutes = time - (hour * 100);
             var originalTime = new DateTime(date.Year, date.Month, date.Day, hour, minutes, 0);
 
-            var stationTime = TimeFunctions.HerbDateandTimeToStationTime(date, time, "LAX");
+            var stationTime = TimeFunctions.HerbDateandIntegerTimeToStationTime(date, time, "LAX");
             var utcTime = TimeFunctions.StationTimeToUTC(stationTime, "LAX");
             var bwiTime = TimeFunctions.UTCtoStationTime(utcTime, "BWI");
             var laxTime = TimeFunctions.StationTimeToStationTime(bwiTime, "BWI", "LAX");
