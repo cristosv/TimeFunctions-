@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
     <PackageReference Include="TimeZoneConverter" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary2\TimeFunctions.csproj" />
   </ItemGroup>
 
 </Project>
