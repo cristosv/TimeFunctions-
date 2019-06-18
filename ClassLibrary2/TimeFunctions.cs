@@ -26,14 +26,6 @@ using System.Data.SqlClient;
 
 public class TimeFunctions
 {
-    //[Microsoft.SqlServer.Server.SqlProcedure]
-    //public static void HelloWorld(out string text)
-    //{
-    //    SqlContext.Pipe.Send("sqlContext.Pipe.Send!" + Environment.NewLine);
-    //    text = "Hello world!";
-    //}
-
-  
     public static string TimeZoneForIATA(string stationIATA)
     {
         using (SqlConnection conn = new SqlConnection())
@@ -53,8 +45,7 @@ public class TimeFunctions
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static int IATADatabaseCount()
     {
-        using (SqlConnection conn
-            = new SqlConnection("context connection=true"))
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
             conn.Open();
             SqlCommand cmd = new SqlCommand(
@@ -67,8 +58,6 @@ public class TimeFunctions
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static DateTime HerbDateandIntegerTimeToStationTime(DateTime date, int time, string stationIATA)
     {
-        
-
         // Convert integer time to create a dateTime
         var hour = time / 100;
         var minutes = time - (hour * 100);
@@ -89,6 +78,7 @@ public class TimeFunctions
         
         return stationDateTime;
     }
+
 
     [SqlFunction(DataAccess = DataAccessKind.Read)]
     public static DateTime StationTimeToStationTime(DateTime dateTime, string fromStationIATA, string toStationIATA)
