@@ -88,5 +88,43 @@ public class FAR117Functions
             return (double)cmd.ExecuteScalar();
         }
     }
+
+    [SqlFunction(DataAccess = DataAccessKind.Read)]
+    public static int CBA_LocalTime(DateTime reportTime)
+    {
+        int hour = reportTime.Hour * 100 + reportTime.Minute;
+        using (SqlConnection conn = new SqlConnection())
+        {
+            conn.ConnectionString =
+                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
+                "Initial Catalog=Scheduling_Dev;" +
+                "User id=MobileApp;" +
+                "Password=fzmnfAmAox61;";
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(
+                "select actual from [dbo].[CBA_Duty_Limits] where " + hour.ToString() + " between startTime and endTime", conn);
+            return (int)cmd.ExecuteScalar();
+        }
+    }
+
+    [SqlFunction(DataAccess = DataAccessKind.Read)]
+    public static int CBA_HerbTime(DateTime date, int time, string stationIATA)
+    {
+
+        var localTime = TimeFunctions.HerbDateandIntegerTimeToStationTime(date, time, stationIATA);
+        int hour = localTime.Hour * 100 + localTime.Minute;
+        using (SqlConnection conn = new SqlConnection())
+        {
+            conn.ConnectionString =
+                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
+                "Initial Catalog=Scheduling_Dev;" +
+                "User id=MobileApp;" +
+                "Password=fzmnfAmAox61;";
+            conn.Open();
+            SqlCommand cmd = new SqlCommand(
+                "select actual from [dbo].[CBA_Duty_Limits] where " + hour.ToString() + " between startTime and endTime", conn);
+            return (int)cmd.ExecuteScalar();
+        }
+    }
 }
 
