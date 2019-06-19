@@ -10,16 +10,11 @@ public class FAR117Functions
     public static double FAR117_Table_A_LocalTime(DateTime reportTime)
     {
         int hour = reportTime.Hour * 100 + reportTime.Minute;
-        using (SqlConnection conn = new SqlConnection())
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
-            conn.ConnectionString =
-                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
-                "Initial Catalog=Scheduling_Dev;" +
-                "User id=MobileApp;" +
-                "Password=fzmnfAmAox61;";
             conn.Open();
             SqlCommand cmd = new SqlCommand(
-                "select max_block from [dbo].[FAR117_Table_A] where " + hour.ToString() + " between startTime and endTime", conn);
+                "select max_block from [Scheduling].[dbo].[FAR117_Table_A] where " + hour.ToString() + " between startTime and endTime", conn);
             return (double)cmd.ExecuteScalar();
         }
     }
@@ -30,16 +25,11 @@ public class FAR117Functions
 
         var localTime = TimeFunctions.HerbDateandIntegerTimeToStationTime(date, time, stationIATA);
         int hour = localTime.Hour * 100 + localTime.Minute;
-        using (SqlConnection conn = new SqlConnection())
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
-            conn.ConnectionString =
-                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
-                "Initial Catalog=Scheduling_Dev;" +
-                "User id=MobileApp;" +
-                "Password=fzmnfAmAox61;";
             conn.Open();
             SqlCommand cmd = new SqlCommand(
-                "select max_block from [dbo].[FAR117_Table_A] where " + hour.ToString() + " between startTime and endTime", conn);
+                "select max_block from [Scheduling].[dbo].[FAR117_Table_A] where " + hour.ToString() + " between startTime and endTime", conn);
             return (double)cmd.ExecuteScalar();
         }
     }
@@ -50,17 +40,12 @@ public class FAR117Functions
         numberOfSegments = Math.Min(Math.Max(numberOfSegments, 1), 7);
         int hour = reportTime.Hour * 100 + reportTime.Minute;
 
-        using (SqlConnection conn = new SqlConnection())
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
-            conn.ConnectionString =
-                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
-                "Initial Catalog=Scheduling_Dev;" +
-                "User id=MobileApp;" +
-                "Password=fzmnfAmAox61;";
             conn.Open();
 
             SqlCommand cmd = new SqlCommand(
-                "select [" + numberOfSegments.ToString() + "] from [dbo].[FAR117_Table_B] where " + hour.ToString() + " between startTime and endTime", conn);
+                "select [" + numberOfSegments.ToString() + "] from [Scheduling].[dbo].[FAR117_Table_B] where " + hour.ToString() + " between startTime and endTime", conn);
 
             return (double)cmd.ExecuteScalar();
         }
@@ -73,17 +58,12 @@ public class FAR117Functions
         var localTime = TimeFunctions.HerbDateandIntegerTimeToStationTime(date, time, stationIATA);
         int hour = localTime.Hour * 100 + localTime.Minute;
 
-        using (SqlConnection conn = new SqlConnection())
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
-            conn.ConnectionString =
-                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
-                "Initial Catalog=Scheduling_Dev;" +
-                "User id=MobileApp;" +
-                "Password=fzmnfAmAox61;";
             conn.Open();
 
             SqlCommand cmd = new SqlCommand(
-                "select [" + numberOfSegments.ToString() + "] from [dbo].[FAR117_Table_B] where " + hour.ToString() + " between startTime and endTime", conn);
+                "select [" + numberOfSegments.ToString() + "] from [Scheduling].[dbo].[FAR117_Table_B] where " + hour.ToString() + " between startTime and endTime", conn);
 
             return (double)cmd.ExecuteScalar();
         }
@@ -93,16 +73,11 @@ public class FAR117Functions
     public static int CBA_LocalTime(DateTime reportTime)
     {
         int hour = reportTime.Hour * 100 + reportTime.Minute;
-        using (SqlConnection conn = new SqlConnection())
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
-            conn.ConnectionString =
-                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
-                "Initial Catalog=Scheduling_Dev;" +
-                "User id=MobileApp;" +
-                "Password=fzmnfAmAox61;";
             conn.Open();
             SqlCommand cmd = new SqlCommand(
-                "select actual from [dbo].[CBA_Duty_Limits] where " + hour.ToString() + " between startTime and endTime", conn);
+                "select actual from [Scheduling].[dbo].[CBA_Duty_Limits] where " + hour.ToString() + " between startTime and endTime", conn);
             return (int)cmd.ExecuteScalar();
         }
     }
@@ -113,16 +88,12 @@ public class FAR117Functions
 
         var localTime = TimeFunctions.HerbDateandIntegerTimeToStationTime(date, time, stationIATA);
         int hour = localTime.Hour * 100 + localTime.Minute;
-        using (SqlConnection conn = new SqlConnection())
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
         {
-            conn.ConnectionString =
-                "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
-                "Initial Catalog=Scheduling_Dev;" +
-                "User id=MobileApp;" +
-                "Password=fzmnfAmAox61;";
+           
             conn.Open();
             SqlCommand cmd = new SqlCommand(
-                "select actual from [dbo].[CBA_Duty_Limits] where " + hour.ToString() + " between startTime and endTime", conn);
+                "select actual from [Scheduling].[dbo].[CBA_Duty_Limits] where " + hour.ToString() + " between startTime and endTime", conn);
             return (int)cmd.ExecuteScalar();
         }
     }

@@ -21,23 +21,23 @@ using System.Data.SqlClient;
 
     else to use in the libary use:
               using (SqlConnection conn = new SqlConnection("context connection=true"))
- */
 
-
-public class TimeFunctions
-{
-    public static string TimeZoneForIATA(string stationIATA)
-    {
-        using (SqlConnection conn = new SqlConnection())
-        {
-            conn.ConnectionString =
+    //using (SqlConnection conn = new SqlConnection())
+                conn.ConnectionString =
                 "Data Source=tcp:az-sqlpsrc01.int.swapa.org;" +
                 "Initial Catalog=Scheduling_Dev;" +
                 "User id=MobileApp;" +
                 "Password=fzmnfAmAox61;";
+ */
+public class TimeFunctions
+{
+    public static string TimeZoneForIATA(string stationIATA)
+    {
+        using (SqlConnection conn = new SqlConnection("context connection=true"))
+        {
             conn.Open();
             SqlCommand cmd = new SqlCommand(
-                "select TimeZone from [dbo].[IATA_TimeZone] where iata = '" + stationIATA + "'", conn);
+                "select TimeZone from [Scheduling].[dbo].[IATA_TimeZone] where iata = '" + stationIATA + "'", conn);
             return (string)cmd.ExecuteScalar();
         }
     }
@@ -49,7 +49,7 @@ public class TimeFunctions
         {
             conn.Open();
             SqlCommand cmd = new SqlCommand(
-                "select count (*) from [dbo].[IATA_TimeZone]", conn);
+                "select count (*) from [Scheduling].[dbo].[IATA_TimeZone]", conn);
             return (int)cmd.ExecuteScalar();
         }
     }
